@@ -16,7 +16,7 @@ class Game
     int num_words = 0;
     int word_length = 0;
     set <string> user_words;
-    string file_name = "english2.txt";
+    string file_name = "list.txt";
     
     void read_file();
     void start();
