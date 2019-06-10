@@ -15,7 +15,7 @@ class Game
     vector <string> dict;
     int num_words = 0;
     int word_length = 0;
-    set <string> user_words;
+    set <char> user_words;
     string file_name = "list.txt";
     
     void read_file();
@@ -23,6 +23,7 @@ class Game
     char user_in();
     void remove_words();
     void print_last_word();
+    void words_used();
 }; 
 
 void Game::read_file()
@@ -47,13 +48,15 @@ void Game::start()
 
     srand((unsigned)time(0)); 
     word_length = rand() %(4) + 4;
-    cout << "Word Length : " << word_length << endl;
+    cout << "Word Length : " << word_length << '\n' <<endl;
 
-    int attempt = 0;
-    while(attempt < 5)
+    int attempt = 5;
+    while(attempt > 0)
     {
+        cout << "You have " << attempt << " turns left"<< endl;
         remove_words();
-         attempt++;
+        words_used();
+        attempt--;
     }
     print_last_word();
 }
@@ -69,19 +72,36 @@ char Game::user_in()
 
     if (in.length() != 1)
     {
-      cout << "You have entered more than one character, please try again." << endl;
+      cout << "\nYou have entered more than one character, please try again." << endl;
     }
     else if (!(std::isalpha(in[0])))
     {
-      cout << "You have entered an invalid character, please try again." << endl;
+      cout << "\nYou have entered an invalid character, please try again." << endl;
     }
-    else
+    else if ( user_words.count(in[0]) != 0)
+    {
+      cout << "\nYou have already used this character, please try again." << endl;
+    }
+    else 
     {
       char input = in[0];
+      user_words.insert(input);
       return input;
     }
   }
   while(loop_condition);
+}
+
+void Game::words_used()
+{
+    cout << "Words used: ";
+    for( set<char>::iterator i = user_words.begin(); i != user_words.end(); ++i )
+    {
+        cout << *i << ", ";
+    }
+    cout << '\b';    
+    cout << '\b';    
+    cout << " \n"<< endl;    
 }
 
 void Game::remove_words()
@@ -116,10 +136,10 @@ void Game::print_last_word()
     string out;
     for (int i = 0; i < num_words; i++)
     {
-        if (dict[i] != "0" && dict[i].length() == word_length)
+        if (dict[i] != "0" && dict[i].length() == word_length )
         {
             cout << "You have lost the game!\nThe word was: " << dict[i] << endl;
-            break;
+            break;        
         }
     }
 }
